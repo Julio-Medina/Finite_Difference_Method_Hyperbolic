@@ -91,15 +91,15 @@ Despreciando el término de error que involucra a la 4ta. derivada en el tiempo 
 \frac{w_{i,j+1}-2w_{i,j}+w_{i,j-1}}{k^2}-\alpha^2\frac{w_{i+1,j}-2w_{i,j}+w_{i-1,j}}{h^2}=0
 \end{equation}
 Definiendo $\lambda=\frac{\alpha k}{h}$ se puede reescribir \ref{eq::difference_equation} de la siguiente manera
-\begin{equation}
+\begin{equation}\label{eq::difference_equation_2}
 w_{i,j+1}-w_{i,j}+w_{i,j-1}-\lambda^2 w_{i+1,j}+2\lambda^2 w_{i,j}-\lambda^2 w_{i-1,j}=0
 \end{equation}
 resolviendo para $w_{i,j+1}$, la aproximación más adelantada en el tiempo, para obtener
-\begin{equation}
+\begin{equation}\label{eq::difference_equation_3}
 w_{i,j+1}=2(1-\lambda^2)w_{i,j}+\lambda^2(w_{i+1,j}+w_{i-1,j})-w_{i,j-1}.
 \end{equation}
 Esta ecuación es valida para cada $i=1,2,\hdots,m-1$ y $j=1,2,\hdots$. Las condiciones de frontera dan
-\begin{equation}
+\begin{equation}\label{eq::condition_1}
 w_{0,j}=w_{m,j}=0,\,\,\,\text{para cada }j=1,2,3,\hdots,
 \end{equation}
 y las condiciones iniciales implican que
@@ -138,6 +138,28 @@ w_{3,j-1}\\
 w_{m-1,j-1}\\
 \end{bmatrix}
 \end{equation}
+Las ecuaciones \ref{eq::difference_equation} y \ref{eq::difference_equation_3} implican que el $(j+1)$ ésimo paso temporal requiere conocimiento de los pasos temporales $j$ y $(j-1)$. Esto produce un problema inicial ya que los valores para $j=0$ están dados por la condición \ref{eq::condition_1}, pero los valores para $j=1$ necesarios para encontrar $w_{i,2}$ deben de ser hallados de la condición inicial para la velocidad, o de la primera derivada temporal
+\begin{equation}
+\frac{\partial u}{\partial t}(x,0)=g(x),\,\,\,0\leq x \leq l.
+\end{equation}
+Un acercamiento es reemplazar $\frac{\partial u}{\partial t}$ por una aproximación de una diferencia adelantada,
+\begin{equation}
+\frac{\partial u}{\partial t}(x_i,0)=\frac{u(x_i,t_1)-u(x_i,0)}{k}-\frac{k}{2}\frac{\partial^2 u}{\partial t^2}(x_i,\tilde{\mu}_i)
+\end{equation}
+para algún $\tilde{\mu}_i \in (0,t_1)$. Resolviendo para $u(x_i,t_1)$ se obtiene
+\begin{equation}
+\begin{aligned}
+u(x_i,t_1)&=u(x_i,0)+k\frac{\partial u}{\partial t}(x_i,0)+\frac{k^2}{2}\frac{\partial^2 u}{\partial t^2}(x_i,\tilde{\mu}_i)\\
+&=u(x_i,0)+kg(x_i)+\frac{k^2}{2}\frac{\partial^2 u}{\partial t^2}(x_i,\tilde{\mu}_i)
+\end{aligned}
+\end{equation} 
+Omitiendo el error de truncación se obtiene la aproximación
+\begin{equation}
+w_{i,1}=w_{i,0}+kg(x_i),\,\,\,\,\text{para cada} i=1,2,\hdots,m-1.
+\end{equation}
+Sin embargo está aproximación tiene error de truncación $O(k)$ mientras que el error en la ecuación \ref{eq::difference_equation_3} es del orden $O(k^2)$
+\subsection{Mejorando la aproximación inicial}
+
 
 \begin{thebibliography}{99}
 %% La bibliografía se ordena en orden alfabético respecto al apellido del 

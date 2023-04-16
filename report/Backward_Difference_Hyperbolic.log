@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2021.5.18)  15 APR 2023 23:48
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019/Debian) (preloaded format=pdflatex 2021.5.18)  16 APR 2023 00:40
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -463,28 +463,29 @@ Overfull \hbox (5.35092pt too wide) detected at line 140
 [] [] \OT1/cmr/m/n/10 = [] [] \OMS/cmsy/m/n/10 ^^@ []
  []
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 164.
 [2]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 164.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 186.
+ [3]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 186.
  (./Backward_Difference_Hyperbolic.aux
 LaTeX Info: Redefining \. on input line 25.
 LaTeX Info: Redefining \% on input line 25.
 )
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 164.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 164.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 186.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 186.
 Package rerunfilecheck Info: File `Backward_Difference_Hyperbolic.out' has not 
 changed.
-(rerunfilecheck)             Checksum: 93F5E856AC51ECB042505F6DC2285F66;212.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 164.
+(rerunfilecheck)             Checksum: 7D66BF87CF976F7F9FAF84F069CB77D1;297.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 186.
  ) 
 Here is how much of TeX's memory you used:
- 8192 strings out of 481239
- 119650 string characters out of 5920377
- 409933 words of memory out of 5000000
- 23284 multiletter control sequences out of 15000+600000
+ 8203 strings out of 481239
+ 119817 string characters out of 5920377
+ 412227 words of memory out of 5000000
+ 23289 multiletter control sequences out of 15000+600000
  536060 words of font info for 39 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 34i,11n,35p,370b,361s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 34i,11n,35p,530b,361s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></us
 r/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/shar
 e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texl
@@ -497,10 +498,10 @@ fonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/
 cm/cmsy7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti
 10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb
 >
-Output written on Backward_Difference_Hyperbolic.pdf (2 pages, 140941 bytes).
+Output written on Backward_Difference_Hyperbolic.pdf (3 pages, 145594 bytes).
 PDF statistics:
- 104 PDF objects out of 1000 (max. 8388607)
- 87 compressed objects within 1 object stream
- 23 named destinations out of 1000 (max. 500000)
- 17 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 122 PDF objects out of 1000 (max. 8388607)
+ 103 compressed objects within 2 object streams
+ 29 named destinations out of 1000 (max. 500000)
+ 25 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -8,7 +8,6 @@ Created on Fri Apr 14 21:15:53 2023
 
 import numpy as np
 import pandas as pd
-from crout_factorization_generalization import Crout_generalization 
 
 def f(x): # boundary condition function
     return np.sin(np.pi*x)
