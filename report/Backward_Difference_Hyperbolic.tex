@@ -1,0 +1,165 @@
+\documentclass[a4paper]{article}
+\usepackage[spanish,es-tabla]{babel}	% trabajar en español
+\spanishsignitems	
+%\usepackage{simplemargins}
+
+%\usepackage[square]{natbib}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{bbold}
+\usepackage{graphicx}
+\usepackage{blindtext}
+\usepackage{hyperref}
+\usepackage{amsthm}
+\newtheorem{theorem}{Teorema}
+\newtheorem{lemma}{Lema}
+\usepackage{algorithm}
+%\usepackage{algorithmic}
+\usepackage{algpseudocode}
+%\usepackage{algorithm2e}
+\usepackage{booktabs}
+
+\setcounter{MaxMatrixCols}{20}
+
+\begin{document}
+\pagenumbering{arabic}
+
+\Large
+ \begin{center}
+\textbf{Método de Diferencias Finitas para ecuaciones hiperbólicas\\}
+
+
+\hspace{10pt}
+
+% Author names and affiliations
+\large
+%Lic. Julio A. Medina$^1$ \\
+Julio A. Medina\\
+\hspace{10pt}
+\small  
+Universidad de San Carlos\\
+Escuela de Ciencias Físicas y Matemáticas\\
+Maestría en Física\\
+\href{mailto:julioantonio.medina@gmail.com}{julioantonio.medina@gmail.com}\\
+
+\end{center}
+
+\hspace{10pt}
+
+\normalsize
+\section{Ecuaciones diferenciales parciales hiperbólicas}
+La ecuación diferencial parcial hiperbólica o ecuación de onda viene dada por
+\begin{equation}\label{eq::hyperbolic_partial_diff}
+\frac{\partial^2 u}{\partial t^2}(x,t) - \alpha^2 \frac{\partial^2 u}{\partial x^2}(x,t)=0,\,\,\,\, 0<x<l, \,\,\,\, t>0.
+\end{equation}
+sujeta a las condiciones
+\begin{equation}
+u(0,t)=u(l,t)=0,\,\,\,\text{para} t>0, 
+\end{equation}
+\begin{equation}
+u(x,0)=f(x),\,\,\, \text{y}\,\,\,\frac{\partial u}{\partial t}(x,0)=g(x),\,\,\, \text{para}\,\,\, 0\leq x\leq l,
+\end{equation}
+donde $\alpha$ es una constante que depende de las condiciones físicas del problema. La ecuación de onda es ubicua en toda la física. \\
+\subsection{Método de Diferencias Finitas para la ecuación de onda(hiperbólica)}
+De manera similar a los métodos utilizados para resolver las ecuaciones parabólicas y elípticas se selecciona un entero $m>0$ para definir puntos de retículo en el eje x usando $h=l/m$. También se hace una selección para el tamaño del paso temporal $k>0$. Los puntos del retículo $(x_i,t_j)$ están definidos por
+\begin{equation}
+x=ih\,\,\,\, \text{y} \,\,\, t_j=jk
+\end{equation}
+para cada $i=0,1,2,\hdots,m$ y $j=0,1,2,\hdots$.\\
+Para cada punto interior del retículo, i.e. puntos que no se encuentran en las fronteras del retículo se tiene que la ecuación de onda \ref{eq::hyperbolic_partial_diff} se convierte en 
+\begin{equation}\label{eq::wave_equation}
+\frac{\partial^2 u}{\partial t^2}(x_i,t_j) - \alpha^2 \frac{\partial^2 u}{\partial x^2}(x_i,t_j)=0
+\end{equation}
+El método de diferencias finitas se obtiene al encontrar la aproximación para la segunda derivada parcial utilizando el cociente de diferencias centradas(ver \cite{Burden}). Estas aproximaciones vienen dadas por
+\begin{equation}\label{eq::difference1}
+\frac{\partial ^2 u}{\partial t^2}(x_i,t_j)=\frac{u(x_i,t_{j+1})-2u(x_i,t_j)+u(x_i,t_{j-1})}{k^2}-\frac{k^2}{12}\frac{\partial^4 u}{\partial t ^4}(x_i,\mu_j)
+\end{equation}
+donde $\mu_j \in (t_{j-1},t_{j+1})$ y
+\begin{equation}\label{eq::difference2}
+\frac{\partial ^2 u}{\partial x^2}(x_i,t_j)=\frac{u(x_{i+1},t_{j})-2u(x_i,t_j)+u(x_{i-1},t_{j})}{h^2}-\frac{h^2}{12}\frac{\partial^4 u}{\partial x ^4}(\xi_i,t_j)
+\end{equation}
+donde $\xi_i \in (x_{j-1},x_{j+1})$. Sustituyendo \ref{eq::difference1} y \ref{eq::difference2} en \ref{eq::wave_equation} se obtiene
+\begin{equation}
+\begin{aligned}
+\frac{u(x_i,t_{j+1})-2u(x_i,t_j)+u(x_i,t_{j-1})}{k^2}-\alpha^2 \frac{u(x_{i+1},t_{j})-2u(x_i,t_j)+u(x_{i-1},t_{j})}{h^2}\\
+=\frac{1}{12}\Bigg[ k^2 \frac{\partial^4 u}{\partial t ^4}(x_i,\mu_j) -\alpha^2 h^2 \frac{\partial^4 u}{\partial x ^4}(\xi_i,t_j)  \Bigg]
+\end{aligned}
+\end{equation}
+Despreciando el término de error que involucra a la 4ta. derivada en el tiempo y la posición se obtiene la ecuación de diferencias
+\begin{equation}\label{eq::difference_equation}
+\frac{w_{i,j+1}-2w_{i,j}+w_{i,j-1}}{k^2}-\alpha^2\frac{w_{i+1,j}-2w_{i,j}+w_{i-1,j}}{h^2}=0
+\end{equation}
+Definiendo $\lambda=\frac{\alpha k}{h}$ se puede reescribir \ref{eq::difference_equation} de la siguiente manera
+\begin{equation}
+w_{i,j+1}-w_{i,j}+w_{i,j-1}-\lambda^2 w_{i+1,j}+2\lambda^2 w_{i,j}-\lambda^2 w_{i-1,j}=0
+\end{equation}
+resolviendo para $w_{i,j+1}$, la aproximación más adelantada en el tiempo, para obtener
+\begin{equation}
+w_{i,j+1}=2(1-\lambda^2)w_{i,j}+\lambda^2(w_{i+1,j}+w_{i-1,j})-w_{i,j-1}.
+\end{equation}
+Esta ecuación es valida para cada $i=1,2,\hdots,m-1$ y $j=1,2,\hdots$. Las condiciones de frontera dan
+\begin{equation}
+w_{0,j}=w_{m,j}=0,\,\,\,\text{para cada }j=1,2,3,\hdots,
+\end{equation}
+y las condiciones iniciales implican que
+\begin{equation}
+w_{i,0}=f(x), \,\,\, para cada i=1,2,\hdots,m-1
+\end{equation}
+Esto se puede expresar convenientemente en forma matricial, resultando en 
+\begin{equation}\label{eq::matrix_difference_equation}
+\begin{bmatrix}
+w_{1,j+1}\\
+w_{2,j+1}\\
+w_{3,j+1}\\
+\vdots\\
+w_{m-1,j+1}\\
+\end{bmatrix}
+=
+\begin{bmatrix}
+2(1-\lambda^2) & \lambda^2 & 0 &\dots&0 \\
+\lambda^2     &\ddots    & \ddots& \ddots&\vdots\\
+0&\ddots&\ddots&\ddots&0\\
+\vdots&\ddots&\ddots&\ddots&\lambda^2 \\
+0&\dots&0&\lambda^2 &2(1-\lambda^2)
+\end{bmatrix}
+\begin{bmatrix}
+w_{1,j}\\
+w_{2,j}\\
+w_{3,j}\\
+\vdots\\
+w_{m-1,j}\\
+\end{bmatrix}-
+\begin{bmatrix}
+w_{1,j-1}\\
+w_{2,j-1}\\
+w_{3,j-1}\\
+\vdots\\
+w_{m-1,j-1}\\
+\end{bmatrix}
+\end{equation}
+
+\begin{thebibliography}{99}
+%% La bibliografía se ordena en orden alfabético respecto al apellido del 
+%% autor o autor principal
+%% cada entrada tiene su formatado dependiendo si es libro, artículo,
+%% tesis, contenido en la web, etc
+
+
+\bibitem{Burden} Richard L. Burden, J. Douglas Faires \textit{Numerical Analysis}, (Ninth Edition). Brooks/Cole, Cengage Learning. 978-0-538-73351-9
+
+\bibitem{Medina} Julio Medina. \textit{Método de Diferencias Finitas para ecuaciones elípticas}. \url{https://github.com/Julio-Medina/Finite_Difference_Method}
+
+\bibitem{Varga} Richard S. Varga. \textit{Matrix Iterative Analysis}. Second Edition. Springer. DOI 10.1007/978-3-642-05156-2
+
+%\bibitem{Feynman} 
+%\bibitem{Hopfield} J.J. Hopfield. \textit{Neural Networks and physical systems with emergent collective computational abilities}. \url{https://doi.org/10.1073/pnas.79.8.2554}
+
+
+%\bibitem{McCulloch} Warren S. McChulloch, Walter H. Pitts. \textit{A LOGICAL CALCULUS OF THE IDEAS IMMANENT IN NERVOUS ACTIVITY}. \url{http://www.cse.chalmers.se/~coquand/AUTOMATA/mcp.pdf}
+
+
+
+\end{thebibliography}
+\end{document}
+
