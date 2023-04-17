@@ -159,6 +159,123 @@ w_{i,1}=w_{i,0}+kg(x_i),\,\,\,\,\text{para cada} i=1,2,\hdots,m-1.
 \end{equation}
 Sin embargo está aproximación tiene error de truncación $O(k)$ mientras que el error en la ecuación \ref{eq::difference_equation_3} es del orden $O(k^2)$
 \subsection{Mejorando la aproximación inicial}
+Para obtener una mejor aproximación para $u(x_i,0)$ se expande $u(x_i,t_1)$ en un segundo polinomio de McLaurin en t, con esto se tiene
+\begin{equation}
+u(x_i,t_1)=u(x_i,0)+k\frac{\partial u}{\partial t}(x_i,0)+\frac{k^2}{2}\frac{\partial^2 u}{\partial t^2}(x_i,0)+\frac{k^3}{6}\frac{\partial^3 u}{\partial t^3}(x_i,\hat{\mu}_i),
+\end{equation}
+para algún $\hat{\mu}_i \in (0,t_1)$. Si $f''$ existe entonces 
+\begin{equation}
+\frac{\partial^2 u}{\partial t^2}(x_i,0)=\alpha^2 \frac{\partial^2 u}{\partial x^2}(x_i,0)=\alpha^2\frac{\partial^2 f}{\partial x^2}(x_i)=\alpha^2 f''(x_i)
+\end{equation}
+además
+\begin{equation}
+u(x_i,t_1)=u(x_i,0)+kg(x_i)+\frac{\alpha^2 k^2}{2}f''(x_i)+\frac{k^3}{6}\frac{\partial ^3 u}{\partial ^3}(x_i,\hat{\mu}_i.)
+\end{equation}
+Esto produce un error del orden $O(k^3)$:
+\begin{equation}\label{eq::aprox_1}
+w_{i,1}=w_{i,0}+kg(x_i)+\frac{\alpha^2 k^2}{2}f''(x_i).
+\end{equation}
+Si $f \in C^4[0,1]$ pero no se tiene $f''(x_i)$ disponible, se puede usar la ecuación de diferencias  
+\begin{equation}\label{eq::second_derivative_diff}
+f''(x_0)=\frac{1}{h^2}[f(x_0-h)-2f(x_0)+f(x_0+h)]-\frac{h^2}{12}f^{(4)}(\xi)
+\end{equation}
+para algún $\xi$, donde $x_0-h<\xi<x_0+h$. Usando \ref{eq::second_derivative_diff} se puede reescribir \ref{eq::aprox_1} como 
+\begin{equation}
+f''(x_i)=\frac{f(x_{i+1}-2f(x_i)+f(x_{i-1}))}{h^2}-\frac{h^2}{12}f^{(4)}(\tilde{\xi}_i),
+\end{equation}
+para algún $\tilde{\xi}_i \in (x_{i-1},x_{i+1})$. Esto implica que 
+\begin{equation}
+u(x_i,t_1)=u(x_i,0)+kg(x_i)+\frac{k^2 \alpha^2}{2h^2}[f(x_{i+1})-2f(x_i)+f(x_{i-1})]+O(k^3 +h^2k^2)
+\end{equation}
+Con la definición de $\lambda=k\alpha/h$ se obtiene
+\begin{equation}
+\begin{aligned}
+u(x_i,t_1)&=u(x_i,0)+kg(x_i)+\frac{\lambda^2}{2}[f(x_{i+1})-2f(x_i)+f(x_{i-1})]+O(k^3 +h^2k^2)\\
+&=(1-\lambda^2)f(x_i)+\frac{\lambda^2}{2}f(x_{i+1})+\frac{\lambda^2}{2}f(x_{i-1})+kg(x_i)+O(k^3 +h^2k^2).
+\end{aligned}
+\end{equation}
+Con esto se obtiene finalmente la mejora a la aproximación inicial, en la forma de una ecuación de diferencias
+\begin{equation}\label{eq::aprox_improvement}
+w_{i,1}=(1-\lambda^2)f(x_i)+\frac{\lambda^2}{2}f(x_{i+1})+\frac{\lambda^2}{2}f(x_{i-1})+kg(x_i)
+\end{equation}
+que puede usarse para hallar $w_{i,1}$, para cada $i=1,2,\hdots, m-1$. Para hallar las aproximaciones subsecuentes se utiliza el sistema \ref{eq::matrix_difference_equation}.
+
+\section{Algoritmo de diferencias atrasadas para la ecuación de onda}
+Con el desarrollo de la sección anterior se tienen las herramientas para escribir un algoritmo que resuelva ecuaciones diferenciales parciales hiperbólicas de la forma \ref{eq::hyperbolic_partial_diff}. El esquema a seguir es el siguiente
+\begin{itemize}
+\item Construir el sistema de ecuaciones inicial \ref{eq::matrix_difference_equation}
+\item Utilizar la mejora en la aproximación inicial para $w_{i,1}$, ecuación \ref{eq::aprox_improvement}
+\item Realizar multiplicaciones matriciales y adición vectorial para cuantos pasos en el tiempo se requiera.
+\item Iterar en el tiempo cuantos pasos se requieran.
+\end{itemize}
+\subsection{Algoritmo de diferencias atrasadas para ecuación de calor(parabólica)}
+Para resolver el problema definido en \ref{eq::hyperbolic_partial_diff} y usando el esquema definido anteriormente conjuntamente con la ecuacion \ref{eq::aprox_improvement} se puede obtener un algoritmo relativamente sencillo para resolver el problema de ecuación de onda
+\begin{algorithm}[H]
+\caption{Finite Difference Linear System}\label{alg::fininte_difference_hyperbolic}
+\begin{algorithmic}[H]
+\Function{finite\_difference\_method\_hyperbolic}{$l,T,\alpha,N,m,f$}
+\State $h \gets l/m$
+\State $k \gets T/N$
+\State $\lambda \gets \alpha k /h$
+\State $x\gets \text{numpy.linspace}(0, l, m+1)$
+\State $t \gets \text{numpy.linspace}(0, T, N+1)$
+\State $A \gets$ zeros $(m-1,m-1)$
+\State $w \gets$ zeros $(m-1)$
+\State $w_0\gets f(x[-1:1])$
+\State $w_1 \gets (1-\lambda^2)f(x[1:-1])+\frac{\lambda^2}{2}(f(x[2:])+f(x[0:-2]))+kg(x[1:-1])$
+\For{$i \gets 0$ to $m-2$}
+\State $A[i,i]\gets 2(1-\lambda^2)$
+\If{$i<m-2$}
+\State $A[i,i+1]\gets \lambda^2$
+\State $A[i+1,i]\gets\lambda^2$
+\EndIf
+\EndFor
+\For{$j \gets N-2$}
+\State $w_j\gets A w_1-w_0$
+\State $w_0\gets w_1$
+\State $w_1\gets w_j$
+\EndFor
+\State \textbf{return} $A, w_i,w_0,w,x$
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+La implementación del algoritmo anterior puede encontrarse en GitHub \url{https://github.com/Julio-Medina/Finite_Difference_Method_Hyperbolic/tree/main/code}.
+\subsection{Ejemplo}
+Usar el método de diferencias atrasadas utilizando el algoritmo \ref{alg::fininte_difference_hyperbolic} con $h=0.1$ y $k=0.05$ para aproximar la solución de la ecuación de calor, usar $h=0.1$ y $k=001$ en el algoritmo
+\begin{equation}
+\frac{\partial u}{\partial t}(x,t) -\frac{\partial^2 u}{\partial x ^2}(x,t)=0, \,\,\, 0<x<1,\,\,\, t>0,
+\end{equation}
+sujeta a las condiciones de frontera
+\begin{equation*}
+u(0,t)=u(1,t)=0,\,\,\, t>0,
+\end{equation*}
+con condiciones iniciales
+\begin{equation}
+u(x,0)=\sin{\pi x},\,\,\, 0\leq x \leq 1,\,\,\,\text{y}\,\,\,\frac{\partial u}{\partial t}(x,0)=0,\,\,\, 0\leq x \leq 1,
+\end{equation}
+y comparar las aproximaciones con el la solución analítica
+\begin{equation}
+u(x,t)=\sin{(\pi x)}\cos{(2\pi t)}
+\end{equation}
+Para  resolver este problema se utilizan las funciones creadas en Python, la tabla donde se tabulan los errores se presenta a continuación\\
+\begin{tabular}{lrrrr}
+\toprule
+i &  $x_i$ &    $w_{i,20}$ &      $u(x_{i,1})$ &  $|u(x{_i,1})-w_{i,20}|$ \\
+\midrule
+0  &  0.0 &  0.000000 &  0.000000e+00 &       0.000000e+00 \\
+1  &  0.1 &  0.309017 &  3.090170e-01 &       5.551115e-17 \\
+2  &  0.2 &  0.587785 &  5.877853e-01 &       2.220446e-16 \\
+3  &  0.3 &  0.809017 &  8.090170e-01 &       0.000000e+00 \\
+4  &  0.4 &  0.951057 &  9.510565e-01 &       3.330669e-16 \\
+5  &  0.5 &  1.000000 &  1.000000e+00 &       0.000000e+00 \\
+6  &  0.6 &  0.951057 &  9.510565e-01 &       2.220446e-16 \\
+7  &  0.7 &  0.809017 &  8.090170e-01 &       0.000000e+00 \\
+8  &  0.8 &  0.587785 &  5.877853e-01 &       0.000000e+00 \\
+9  &  0.9 &  0.309017 &  3.090170e-01 &       5.551115e-17 \\
+10 &  1.0 &  0.000000 &  1.224647e-16 &       1.224647e-16 \\
+\bottomrule
+\end{tabular}
+
 
 
 \begin{thebibliography}{99}
@@ -166,7 +283,6 @@ Sin embargo está aproximación tiene error de truncación $O(k)$ mientras que e
 %% autor o autor principal
 %% cada entrada tiene su formatado dependiendo si es libro, artículo,
 %% tesis, contenido en la web, etc
-
 
 \bibitem{Burden} Richard L. Burden, J. Douglas Faires \textit{Numerical Analysis}, (Ninth Edition). Brooks/Cole, Cengage Learning. 978-0-538-73351-9
 
