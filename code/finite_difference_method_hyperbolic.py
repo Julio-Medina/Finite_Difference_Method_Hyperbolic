@@ -44,4 +44,34 @@ def finite_difference_method_hyperbolic(l,T,     # l is the x endpoint, T is the
         w1=w_j
     return A, w_j, w0, w,x
 
-A,w_j,w0,w,x=finite_difference_method_hyperbolic(1,1,2,20,10,f,g)
+def u(x,t): # function for analytical solution, used in error analysis table
+    return np.sin(np.pi*x)*np.cos(2*np.pi*t)
+
+def error_table(m,x,w,u): # error analysis table
+    csv_list=[]
+    for i in range(m+1):
+        if i==0 or i==m:
+            aux=0
+        else:
+            aux=w[i-1]
+        element=[x[i],aux,u(x[i],1),abs(aux-u(x[i],1))]
+        csv_list.append(element)
+    column_scheme=['x_i',
+                   'w_i,20',
+                   'u(x_i,1)',
+                   '|u(x_i,1)-w_i,20|']
+    csv_file_df=pd.DataFrame(csv_list, columns=column_scheme)  
+    csv_file_df.to_csv('error_table.csv', index=False)
+    return csv_file_df
+
+l=1
+T=1    
+alpha=2                                    
+N=20
+m=10
+
+
+A,w_j,w0,w,x=finite_difference_method_hyperbolic(l,T,alpha,N,m,f,g)
+
+error_analysis_table=error_table(m,x,w_j,u)
+LaTeX_table=error_analysis_table.to_latex()
