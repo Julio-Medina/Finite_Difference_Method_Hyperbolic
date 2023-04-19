@@ -206,7 +206,7 @@ Con el desarrollo de la sección anterior se tienen las herramientas para escrib
 \item Construir el sistema de ecuaciones inicial \ref{eq::matrix_difference_equation}
 \item Utilizar la mejora en la aproximación inicial para $w_{i,1}$, ecuación \ref{eq::aprox_improvement}
 \item Realizar multiplicaciones matriciales y adición vectorial para cuantos pasos en el tiempo se requiera.
-\item Iterar en el tiempo cuantos pasos se requieran.
+%\item Iterar en el tiempo cuantos pasos se requieran.
 \end{itemize}
 \subsection{Algoritmo de diferencias atrasadas para ecuación de calor(parabólica)}
 Para resolver el problema definido en \ref{eq::hyperbolic_partial_diff} y usando el esquema definido anteriormente conjuntamente con la ecuacion \ref{eq::aprox_improvement} se puede obtener un algoritmo relativamente sencillo para resolver el problema de ecuación de onda
@@ -257,8 +257,9 @@ y comparar las aproximaciones con el la solución analítica
 \begin{equation}
 u(x,t)=\sin{(\pi x)}\cos{(2\pi t)}
 \end{equation}
-Para  resolver este problema se utilizan las funciones creadas en Python, la tabla donde se tabulan los errores se presenta a continuación\\
-\begin{tabular}{lrrrr}
+Para  resolver este problema se utilizan las funciones creadas el algoritmo \ref{alg::fininte_difference_hyperbolic}, la tabla donde se tabulan los errores se presenta a continuación\\
+\begin{table}\label{Tab::table_1}
+\begin{tabular}{lrrrr}%
 \toprule
 i &  $x_i$ &    $w_{i,20}$ &      $u(x_{i,1})$ &  $|u(x{_i,1})-w_{i,20}|$ \\
 \midrule
@@ -275,7 +276,9 @@ i &  $x_i$ &    $w_{i,20}$ &      $u(x_{i,1})$ &  $|u(x{_i,1})-w_{i,20}|$ \\
 10 &  1.0 &  0.000000 &  1.224647e-16 &       1.224647e-16 \\
 \bottomrule
 \end{tabular}
-
+\end{table}
+\section{Conclusiones}
+El método de diferencias finitas aplicado a ecuaciones diferenciales parciales hiperbólicas con condiciones de frontera y condiciones iniciales en el tiempo tiene una implementación relativamente sencilla. El método se centra en construir una ecuación matricial para iterar en el tiempo. Con la ayuda teórica de la mejora en la aproximación inicial se consiguen mejores aproximaciones. Como se puede notar en la  tabla \ref{Tab::table_1}, se tiene el comportamiento esperado, es decir que se mantiene la simetría con respecto al punto $t=0.5$ con las aproximaciones con respecto a la solución analítica.
 
 
 \begin{thebibliography}{99}
