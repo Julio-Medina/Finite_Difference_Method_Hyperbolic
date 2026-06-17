@@ -94,17 +94,17 @@ Definiendo $\lambda=\frac{\alpha k}{h}$ se puede reescribir \ref{eq::difference_
 \begin{equation}\label{eq::difference_equation_2}
 w_{i,j+1}-w_{i,j}+w_{i,j-1}-\lambda^2 w_{i+1,j}+2\lambda^2 w_{i,j}-\lambda^2 w_{i-1,j}=0
 \end{equation}
-resolviendo para $w_{i,j+1}$, la aproximación más adelantada en el tiempo, para obtener
+resolviendo para $w_{i,j+1}$ la aproximación más adelantada en el tiempo, se obtiene
 \begin{equation}\label{eq::difference_equation_3}
 w_{i,j+1}=2(1-\lambda^2)w_{i,j}+\lambda^2(w_{i+1,j}+w_{i-1,j})-w_{i,j-1}.
 \end{equation}
 Esta ecuación es valida para cada $i=1,2,\hdots,m-1$ y $j=1,2,\hdots$. Las condiciones de frontera dan
 \begin{equation}\label{eq::condition_1}
-w_{0,j}=w_{m,j}=0,\,\,\,\text{para cada }j=1,2,3,\hdots,
+w_{0,j}=w_{m,j}=0,\,\,\,\forall\,\,\,j=1,2,3,\hdots,
 \end{equation}
 y las condiciones iniciales implican que
 \begin{equation}
-w_{i,0}=f(x), \,\,\, para cada i=1,2,\hdots,m-1
+w_{i,0}=f(x), \,\,\, \forall\,\, i=1,2,\hdots,m-1
 \end{equation}
 Esto se puede expresar convenientemente en forma matricial, resultando en 
 \begin{equation}\label{eq::matrix_difference_equation}
@@ -155,7 +155,7 @@ u(x_i,t_1)&=u(x_i,0)+k\frac{\partial u}{\partial t}(x_i,0)+\frac{k^2}{2}\frac{\p
 \end{equation} 
 Omitiendo el error de truncación se obtiene la aproximación
 \begin{equation}
-w_{i,1}=w_{i,0}+kg(x_i),\,\,\,\,\text{para cada} i=1,2,\hdots,m-1.
+w_{i,1}=w_{i,0}+kg(x_i),\,\,\,\,\forall\,\,\, i=1,2,\hdots,m-1.
 \end{equation}
 Sin embargo está aproximación tiene error de truncación $O(k)$ mientras que el error en la ecuación \ref{eq::difference_equation_3} es del orden $O(k^2)$
 \subsection{Mejorando la aproximación inicial}
@@ -278,7 +278,7 @@ i &  $x_i$ &    $w_{i,20}$ &      $u(x_{i,1})$ &  $|u(x{_i,1})-w_{i,20}|$ \\
 \end{tabular}
 \end{table}
 \section{Conclusiones}
-El método de diferencias finitas aplicado a ecuaciones diferenciales parciales hiperbólicas con condiciones de frontera y condiciones iniciales en el tiempo tiene una implementación relativamente sencilla. El método se centra en construir una ecuación matricial para iterar en el tiempo. Con la ayuda teórica de la mejora en la aproximación inicial se consiguen mejores aproximaciones. Como se puede notar en la  tabla \ref{Tab::table_1}, se tiene el comportamiento esperado, es decir que se mantiene la simetría con respecto al punto $t=0.5$ con las aproximaciones con respecto a la solución analítica.
+El método de diferencias finitas aplicado a ecuaciones diferenciales parciales hiperbólicas con condiciones de frontera y condiciones iniciales en el tiempo tiene una implementación relativamente sencilla. El método se centra en construir una ecuación matricial para iterar en el tiempo. Con la ayuda teórica de la mejora en la aproximación inicial se consiguen mejores aproximaciones. Como se puede notar en la  tabla \ref{Tab::table_1}, se tiene el comportamiento esperado, es decir que se mantiene la simetría con respecto al punto $t=0.5$ de las aproximaciones con respecto a la solución analítica. El error obtenido se comporta como se espera al haber utilizado la mejora en la aproximación inicial es decir es del orden $O(k^3)$.
 
 
 \begin{thebibliography}{99}
