@@ -1,5 +1,7 @@
 # Finite Difference Method for Hyperbolic Equations
 
+**Author:** BSc. Julio Medina
+
 A numerical implementation of an explicit finite-difference method for the one-dimensional wave equation. The repository derives the centered finite-difference scheme, expresses the time-stepping recurrence in matrix form, improves the first time-step approximation, and compares the numerical result with an analytical solution.
 
 ## Problem statement
@@ -52,9 +54,49 @@ The update can be written as
 
 $$\mathbf{w}^{(j+1)}=A\mathbf{w}^{(j)}-\mathbf{w}^{(j-1)},$$
 
-where the tridiagonal matrix is
+where the tridiagonal matrix is represented below using an HTML table so that it renders consistently on GitHub.
 
-$$A=\begin{bmatrix}2(1-\lambda^2)&\lambda^2&0&\cdots&0\\\lambda^2&2(1-\lambda^2)&\lambda^2&\ddots&\vdots\\0&\ddots&\ddots&\ddots&0\\\vdots&\ddots&\lambda^2&2(1-\lambda^2)&\lambda^2\\0&\cdots&0&\lambda^2&2(1-\lambda^2)\end{bmatrix}.$$
+<p align="center"><strong>A =</strong></p>
+
+<table align="center">
+  <tbody>
+    <tr>
+      <td>2(1 − λ<sup>2</sup>)</td>
+      <td>λ<sup>2</sup></td>
+      <td>0</td>
+      <td>⋯</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>λ<sup>2</sup></td>
+      <td>2(1 − λ<sup>2</sup>)</td>
+      <td>λ<sup>2</sup></td>
+      <td>⋱</td>
+      <td>⋮</td>
+    </tr>
+    <tr>
+      <td>0</td>
+      <td>⋱</td>
+      <td>⋱</td>
+      <td>⋱</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>⋮</td>
+      <td>⋱</td>
+      <td>λ<sup>2</sup></td>
+      <td>2(1 − λ<sup>2</sup>)</td>
+      <td>λ<sup>2</sup></td>
+    </tr>
+    <tr>
+      <td>0</td>
+      <td>⋯</td>
+      <td>0</td>
+      <td>λ<sup>2</sup></td>
+      <td>2(1 − λ<sup>2</sup>)</td>
+    </tr>
+  </tbody>
+</table>
 
 ## Included example
 
