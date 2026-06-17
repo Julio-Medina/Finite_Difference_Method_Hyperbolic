@@ -1,7 +1,5 @@
 # Finite Difference Method for Hyperbolic Equations
 
-**Author:** BSc. Julio Medina
-
 A numerical implementation of an explicit finite-difference method for the one-dimensional wave equation. The repository derives the centered finite-difference scheme, expresses the time-stepping recurrence in matrix form, improves the first time-step approximation, and compares the numerical result with an analytical solution.
 
 ## Problem statement
@@ -175,6 +173,8 @@ Compares the final numerical vector with the analytical solution and exports the
 ## Notes
 
 The source filename refers to a “backward difference,” but the implemented algorithm is an explicit centered-difference scheme: it uses a centered second derivative in space and a centered second derivative in time. The English report uses terminology consistent with the actual method.
+
+**Author:** BSc. Julio Medina
 
 ## Reference
 
