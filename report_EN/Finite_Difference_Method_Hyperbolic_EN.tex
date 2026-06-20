@@ -1,0 +1,313 @@
+\documentclass[a4paper]{article}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{bbold}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{amsthm}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{booktabs}
+
+\setcounter{MaxMatrixCols}{20}
+
+\begin{document}
+\pagenumbering{arabic}
+
+\Large
+\begin{center}
+\textbf{Finite Difference Method for Hyperbolic Equations\\}
+
+\hspace{10pt}
+
+\large
+Julio A. Medina\\
+\hspace{10pt}
+\small
+Universidad de San Carlos\\
+School of Physical Sciences and Mathematics\\
+Master's Program in Physics\\
+\href{mailto:julioantonio.medina@gmail.com}{julioantonio.medina@gmail.com}\\
+\end{center}
+
+\hspace{10pt}
+
+\normalsize
+\section{Hyperbolic Partial Differential Equations}
+
+The hyperbolic partial differential equation, also known as the wave equation, is given by
+\begin{equation}\label{eq::hyperbolic_partial_diff}
+\frac{\partial^2 u}{\partial t^2}(x,t)-\alpha^2\frac{\partial^2 u}{\partial x^2}(x,t)=0,\qquad 0<x<l,\qquad t>0.
+\end{equation}
+It is subject to the boundary conditions
+\begin{equation}
+u(0,t)=u(l,t)=0,\qquad \text{for }t>0,
+\end{equation}
+and the initial conditions
+\begin{equation}
+u(x,0)=f(x),\qquad \frac{\partial u}{\partial t}(x,0)=g(x),\qquad \text{for }0\leq x\leq l,
+\end{equation}
+where $\alpha$ is a constant determined by the physical conditions of the problem. The wave equation is ubiquitous throughout physics.
+
+\subsection{Finite Difference Method for the Wave Equation}
+
+As in the finite-difference methods used to solve parabolic and elliptic equations, an integer $m>0$ is selected to define lattice points along the $x$-axis, with $h=l/m$. A temporal step size $k>0$ is also selected. The grid points $(x_i,t_j)$ are defined by
+\begin{equation}
+x_i=ih,\qquad t_j=jk,
+\end{equation}
+for $i=0,1,2,\ldots,m$ and $j=0,1,2,\ldots$.
+
+At every interior grid point, namely, every point that does not lie on the grid boundary, the wave equation in Eq.~\ref{eq::hyperbolic_partial_diff} becomes
+\begin{equation}\label{eq::wave_equation}
+\frac{\partial^2 u}{\partial t^2}(x_i,t_j)-\alpha^2\frac{\partial^2 u}{\partial x^2}(x_i,t_j)=0.
+\end{equation}
+The finite-difference method is obtained by approximating the second partial derivatives with centered-difference quotients; see Ref.~\cite{Burden}. These approximations are
+\begin{equation}\label{eq::difference1}
+\frac{\partial^2 u}{\partial t^2}(x_i,t_j)=\frac{u(x_i,t_{j+1})-2u(x_i,t_j)+u(x_i,t_{j-1})}{k^2}-\frac{k^2}{12}\frac{\partial^4 u}{\partial t^4}(x_i,\mu_j),
+\end{equation}
+where $\mu_j\in(t_{j-1},t_{j+1})$, and
+\begin{equation}\label{eq::difference2}
+\frac{\partial^2 u}{\partial x^2}(x_i,t_j)=\frac{u(x_{i+1},t_j)-2u(x_i,t_j)+u(x_{i-1},t_j)}{h^2}-\frac{h^2}{12}\frac{\partial^4 u}{\partial x^4}(\xi_i,t_j),
+\end{equation}
+where $\xi_i\in(x_{i-1},x_{i+1})$. Substituting Eqs.~\ref{eq::difference1} and \ref{eq::difference2} into Eq.~\ref{eq::wave_equation} gives
+\begin{equation}
+\begin{aligned}
+&\frac{u(x_i,t_{j+1})-2u(x_i,t_j)+u(x_i,t_{j-1})}{k^2}-\alpha^2\frac{u(x_{i+1},t_j)-2u(x_i,t_j)+u(x_{i-1},t_j)}{h^2}\\
+&\qquad=\frac{1}{12}\left[k^2\frac{\partial^4u}{\partial t^4}(x_i,\mu_j)-\alpha^2h^2\frac{\partial^4u}{\partial x^4}(\xi_i,t_j)\right].
+\end{aligned}
+\end{equation}
+Neglecting the error term involving the fourth derivatives in time and space yields the difference equation
+\begin{equation}\label{eq::difference_equation}
+\frac{w_{i,j+1}-2w_{i,j}+w_{i,j-1}}{k^2}-\alpha^2\frac{w_{i+1,j}-2w_{i,j}+w_{i-1,j}}{h^2}=0.
+\end{equation}
+Defining
+\begin{equation}
+\lambda=\frac{\alpha k}{h},
+\end{equation}
+Eq.~\ref{eq::difference_equation} can be rewritten as
+\begin{equation}\label{eq::difference_equation_2}
+w_{i,j+1}-2w_{i,j}+w_{i,j-1}-\lambda^2w_{i+1,j}+2\lambda^2w_{i,j}-\lambda^2w_{i-1,j}=0.
+\end{equation}
+Solving for the approximation at the next time level gives
+\begin{equation}\label{eq::difference_equation_3}
+w_{i,j+1}=2(1-\lambda^2)w_{i,j}+\lambda^2\left(w_{i+1,j}+w_{i-1,j}\right)-w_{i,j-1}.
+\end{equation}
+This equation is valid for $i=1,2,\ldots,m-1$ and $j=1,2,\ldots$. The boundary conditions give
+\begin{equation}\label{eq::condition_1}
+w_{0,j}=w_{m,j}=0,\qquad \forall j=1,2,3,\ldots,
+\end{equation}
+and the initial displacement implies
+\begin{equation}
+w_{i,0}=f(x_i),\qquad \forall i=1,2,\ldots,m-1.
+\end{equation}
+For the standard explicit scheme, stability requires the Courant--Friedrichs--Lewy condition $\lambda\leq 1$.
+
+The recurrence can be written conveniently in matrix form:
+\begin{equation}\label{eq::matrix_difference_equation}
+\begin{bmatrix}
+w_{1,j+1}\\
+w_{2,j+1}\\
+w_{3,j+1}\\
+\vdots\\
+w_{m-1,j+1}
+\end{bmatrix}
+=
+\begin{bmatrix}
+2(1-\lambda^2)&\lambda^2&0&\dots&0\\
+\lambda^2&\ddots&\ddots&\ddots&\vdots\\
+0&\ddots&\ddots&\ddots&0\\
+\vdots&\ddots&\ddots&\ddots&\lambda^2\\
+0&\dots&0&\lambda^2&2(1-\lambda^2)
+\end{bmatrix}
+\begin{bmatrix}
+w_{1,j}\\
+w_{2,j}\\
+w_{3,j}\\
+\vdots\\
+w_{m-1,j}
+\end{bmatrix}
+-
+\begin{bmatrix}
+w_{1,j-1}\\
+w_{2,j-1}\\
+w_{3,j-1}\\
+\vdots\\
+w_{m-1,j-1}
+\end{bmatrix}.
+\end{equation}
+
+Equations~\ref{eq::difference_equation} and \ref{eq::difference_equation_3} show that the $(j+1)$th time step requires knowledge of the solutions at time levels $j$ and $j-1$. This creates an initialization problem: the values at $j=0$ are given by the initial displacement, but the values at $j=1$, which are needed to compute $w_{i,2}$, must be obtained from the initial velocity condition
+\begin{equation}
+\frac{\partial u}{\partial t}(x,0)=g(x),\qquad 0\leq x\leq l.
+\end{equation}
+One approach is to replace $\partial u/\partial t$ with a forward-difference approximation:
+\begin{equation}
+\frac{\partial u}{\partial t}(x_i,0)=\frac{u(x_i,t_1)-u(x_i,0)}{k}-\frac{k}{2}\frac{\partial^2u}{\partial t^2}(x_i,\widetilde{\mu}_i),
+\end{equation}
+for some $\widetilde{\mu}_i\in(0,t_1)$. Solving for $u(x_i,t_1)$ gives
+\begin{equation}
+\begin{aligned}
+u(x_i,t_1)&=u(x_i,0)+k\frac{\partial u}{\partial t}(x_i,0)+\frac{k^2}{2}\frac{\partial^2u}{\partial t^2}(x_i,\widetilde{\mu}_i)\\
+&=u(x_i,0)+kg(x_i)+\frac{k^2}{2}\frac{\partial^2u}{\partial t^2}(x_i,\widetilde{\mu}_i).
+\end{aligned}
+\end{equation}
+Omitting the truncation error gives the approximation
+\begin{equation}
+w_{i,1}=w_{i,0}+kg(x_i),\qquad \forall i=1,2,\ldots,m-1.
+\end{equation}
+However, this approximation has truncation error $O(k)$, whereas the centered recurrence in Eq.~\ref{eq::difference_equation_3} is second-order accurate in time.
+
+\subsection{Improving the Initial Approximation}
+
+To obtain a more accurate approximation for $u(x_i,t_1)$, expand it in a second-order Maclaurin polynomial in $t$:
+\begin{equation}
+u(x_i,t_1)=u(x_i,0)+k\frac{\partial u}{\partial t}(x_i,0)+\frac{k^2}{2}\frac{\partial^2u}{\partial t^2}(x_i,0)+\frac{k^3}{6}\frac{\partial^3u}{\partial t^3}(x_i,\widehat{\mu}_i),
+\end{equation}
+for some $\widehat{\mu}_i\in(0,t_1)$. If $f''$ exists, then
+\begin{equation}
+\frac{\partial^2u}{\partial t^2}(x_i,0)=\alpha^2\frac{\partial^2u}{\partial x^2}(x_i,0)=\alpha^2\frac{\partial^2f}{\partial x^2}(x_i)=\alpha^2f''(x_i).
+\end{equation}
+Therefore,
+\begin{equation}
+u(x_i,t_1)=u(x_i,0)+kg(x_i)+\frac{\alpha^2k^2}{2}f''(x_i)+\frac{k^3}{6}\frac{\partial^3u}{\partial t^3}(x_i,\widehat{\mu}_i).
+\end{equation}
+This gives the approximation
+\begin{equation}\label{eq::aprox_1}
+w_{i,1}=w_{i,0}+kg(x_i)+\frac{\alpha^2k^2}{2}f''(x_i),
+\end{equation}
+with a local truncation error of order $O(k^3)$.
+
+If $f\in C^4[0,l]$ but $f''(x_i)$ is not directly available, the centered-difference formula
+\begin{equation}\label{eq::second_derivative_diff}
+f''(x_0)=\frac{f(x_0-h)-2f(x_0)+f(x_0+h)}{h^2}-\frac{h^2}{12}f^{(4)}(\xi)
+\end{equation}
+can be used for some $\xi$ satisfying $x_0-h<\xi<x_0+h$. Thus,
+\begin{equation}
+f''(x_i)=\frac{f(x_{i+1})-2f(x_i)+f(x_{i-1})}{h^2}-\frac{h^2}{12}f^{(4)}(\widetilde{\xi}_i),
+\end{equation}
+for some $\widetilde{\xi}_i\in(x_{i-1},x_{i+1})$. It follows that
+\begin{equation}
+u(x_i,t_1)=u(x_i,0)+kg(x_i)+\frac{k^2\alpha^2}{2h^2}\left[f(x_{i+1})-2f(x_i)+f(x_{i-1})\right]+O(k^3+h^2k^2).
+\end{equation}
+Using $\lambda=\alpha k/h$ gives
+\begin{equation}
+\begin{aligned}
+u(x_i,t_1)&=u(x_i,0)+kg(x_i)+\frac{\lambda^2}{2}\left[f(x_{i+1})-2f(x_i)+f(x_{i-1})\right]+O(k^3+h^2k^2)\\
+&=(1-\lambda^2)f(x_i)+\frac{\lambda^2}{2}f(x_{i+1})+\frac{\lambda^2}{2}f(x_{i-1})+kg(x_i)+O(k^3+h^2k^2).
+\end{aligned}
+\end{equation}
+The improved initialization formula is therefore
+\begin{equation}\label{eq::aprox_improvement}
+w_{i,1}=(1-\lambda^2)f(x_i)+\frac{\lambda^2}{2}f(x_{i+1})+\frac{\lambda^2}{2}f(x_{i-1})+kg(x_i).
+\end{equation}
+It can be used to compute $w_{i,1}$ for every $i=1,2,\ldots,m-1$. The subsequent approximations are obtained from the system in Eq.~\ref{eq::matrix_difference_equation}.
+
+\section{Finite Difference Algorithm for the Wave Equation}
+
+The development in the preceding section provides the tools needed to construct an algorithm for hyperbolic partial differential equations of the form in Eq.~\ref{eq::hyperbolic_partial_diff}. The procedure is as follows:
+\begin{itemize}
+\item Construct the matrix system in Eq.~\ref{eq::matrix_difference_equation}.
+\item Use the improved initial approximation in Eq.~\ref{eq::aprox_improvement} to compute $w_{i,1}$.
+\item Apply the matrix recurrence for the required number of time steps.
+\end{itemize}
+
+\subsection{Algorithm}
+
+The following pseudocode implements the explicit centered finite-difference scheme together with the improved first time step.
+\begin{algorithm}[H]
+\caption{Explicit finite-difference method for the wave equation}\label{alg::finite_difference_hyperbolic}
+\begin{algorithmic}[1]
+\Function{finite\_difference\_method\_hyperbolic}{$l,T,\alpha,N,m,f,g$}
+\State $h\gets l/m$
+\State $k\gets T/N$
+\State $\lambda\gets \alpha k/h$
+\State $x\gets \operatorname{linspace}(0,l,m+1)$
+\State $t\gets \operatorname{linspace}(0,T,N+1)$
+\State $A\gets \operatorname{zeros}(m-1,m-1)$
+\State $w_0\gets f(x[1:-1])$
+\State $w_1\gets(1-\lambda^2)f(x[1:-1])+\frac{\lambda^2}{2}\left(f(x[2:])+f(x[0:-2])\right)+kg(x[1:-1])$
+\For{$i\gets0$ to $m-2$}
+\State $A[i,i]\gets2(1-\lambda^2)$
+\If{$i<m-2$}
+\State $A[i,i+1]\gets\lambda^2$
+\State $A[i+1,i]\gets\lambda^2$
+\EndIf
+\EndFor
+\For{each $t_j$ in $t[2:]$}
+\State $w_j\gets Aw_1-w_0$
+\State $w_0\gets w_1$
+\State $w_1\gets w_j$
+\EndFor
+\State \Return $A,w_j,w_0,x$
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+The corresponding implementation is available in the repository at \url{https://github.com/Julio-Medina/Finite_Difference_Method_Hyperbolic}.
+
+\subsection{Example}
+
+Use the finite-difference algorithm in Algorithm~\ref{alg::finite_difference_hyperbolic}, with $h=0.1$ and $k=0.05$, to approximate the solution of the wave equation
+\begin{equation}
+\frac{\partial^2u}{\partial t^2}(x,t)-4\frac{\partial^2u}{\partial x^2}(x,t)=0,\qquad 0<x<1,
+\qquad t>0,
+\end{equation}
+subject to the boundary conditions
+\begin{equation*}
+u(0,t)=u(1,t)=0,\qquad t>0,
+\end{equation*}
+and the initial conditions
+\begin{equation}
+u(x,0)=\sin(\pi x),\qquad \frac{\partial u}{\partial t}(x,0)=0,
+\qquad 0\leq x\leq1.
+\end{equation}
+The analytical solution is
+\begin{equation}
+u(x,t)=\sin(\pi x)\cos(2\pi t).
+\end{equation}
+
+For $m=10$, $N=20$, and $\alpha=2$, the grid spacings are $h=0.1$ and $k=0.05$, and the Courant number is $\lambda=1$. The numerical and analytical values at $t=1$ are compared in Table~\ref{Tab::table_1}.
+
+\begin{table}[ht]
+\centering
+\caption{Numerical and analytical solutions at $t=1$.}
+\label{Tab::table_1}
+\begin{tabular}{lrrrr}
+\toprule
+$i$&$x_i$&$w_{i,20}$&$u(x_i,1)$&$\lvert u(x_i,1)-w_{i,20}\rvert$\\
+\midrule
+0&0.0&0.000000&0.000000e+00&0.000000e+00\\
+1&0.1&0.309017&3.090170e-01&5.551115e-17\\
+2&0.2&0.587785&5.877853e-01&2.220446e-16\\
+3&0.3&0.809017&8.090170e-01&0.000000e+00\\
+4&0.4&0.951057&9.510565e-01&3.330669e-16\\
+5&0.5&1.000000&1.000000e+00&0.000000e+00\\
+6&0.6&0.951057&9.510565e-01&2.220446e-16\\
+7&0.7&0.809017&8.090170e-01&0.000000e+00\\
+8&0.8&0.587785&5.877853e-01&0.000000e+00\\
+9&0.9&0.309017&3.090170e-01&5.551115e-17\\
+10&1.0&0.000000&1.224647e-16&1.224647e-16\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Conclusions}
+
+The finite-difference method for hyperbolic partial differential equations with boundary conditions and initial displacement and velocity data has a relatively straightforward implementation. The method is based on constructing a tridiagonal matrix recurrence and advancing the numerical solution in time. The improved initialization formula preserves the second-order temporal accuracy of the centered scheme.
+
+As shown in Table~\ref{Tab::table_1}, the numerical solution agrees with the analytical solution to approximately machine precision for the selected example. This exceptionally small error is a special property of the chosen parameters: $\lambda=1$, and the initial condition is a discrete sine eigenmode whose numerical frequency matches the exact frequency. In general, the centered scheme is second-order accurate in both time and space, provided the solution is sufficiently smooth and the CFL stability condition is satisfied.
+
+\begin{thebibliography}{99}
+
+\bibitem{Burden} Richard L. Burden and J. Douglas Faires, \textit{Numerical Analysis}, 9th ed., Brooks/Cole, Cengage Learning, ISBN 978-0-538-73351-9.
+
+\bibitem{Medina} Julio Medina, \textit{Finite Difference Method for Elliptic Equations}, \url{https://github.com/Julio-Medina/Finite_Difference_Method}.
+
+\bibitem{Varga} Richard S. Varga, \textit{Matrix Iterative Analysis}, 2nd ed., Springer, DOI: 10.1007/978-3-642-05156-2.
+
+\end{thebibliography}
+\end{document}
